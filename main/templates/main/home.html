@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Welcome {{ user }}!</h1>
+    {% if watchlist_name %}
+        <h2>Watchlist {{ watchlist_name }}</h2>
+        {% for ticker in watchlist_tickers %}
+            <table>
+                <tr>
+                    <td><a href="{% url 'ticker-detail' ticker.pk %}">{{ ticker.symbol }}</a></td>
+                    <td>{{ ticker.get_current_price }}</td>
+                </tr>
+            </table>
+        {% endfor %}
+    {% else %}
+        <p>{{ no_watchlists }}</p>
+    {% endif %}
+{% endblock %}

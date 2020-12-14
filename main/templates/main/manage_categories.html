@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Manage Categories</h1>
+    <h2>Followed Categories</h2>
+        {% if followed_categories %}
+        <table>
+            {% for category in followed_categories %}
+                <td>{{ category.category_name }}</td>
+                <td><a href="{% url 'category-detail' category.pk %}">Details</a></td>
+            {% endfor %}
+        </table>
+        {% else %}
+            <p>You haven't followed any categories. Check out the most popular and trending categories [HERE].</p>
+        {% endif %}
+{% endblock %}

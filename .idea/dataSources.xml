@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="db" uuid="a774d0b4-06a0-432c-ba62-a7210fbcae65">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\MDaley\PycharmProjects\contango\db.sqlite3</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="contango_data" uuid="b8765b4a-5380-4766-96f2-2bbe4ffa2bec">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\MDaley\PycharmProjects\contango\contango_data.db</jdbc-url>
+    </data-source>
+  </component>
+</project>

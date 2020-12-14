@@ -1,0 +1,139 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <!-- modal -->
+    <div class="modal fade" id="followModal" tabindex="-1" role="dialog" aria-labelledby="follow" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="follow">Follow {{ category.category_name }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to follow {{ category.category_name }}?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <form action="{% url 'follow-unfollow-view' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="category_pk" value="{{ category.pk }}">
+                <button type="submit" class="btn btn-primary">Follow</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h1>{{ category.category_name }}</h1>
+    <p>Followers: {{ category.follower_count }}</p>
+    {% if category in user_followed_categories %}
+        <form action="{% url 'follow-unfollow-view' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="category_pk" value="{{ category.pk }}">
+            <button type="submit" class="btn btn-primary btn">Unfollow</button>
+        </form>
+    {% else %}
+        <button id="follow-btn" type="button" class="btn btn-primary btn">Follow</button>
+    {% endif %}
+    <br><br>
+    <h2>Futures Term Structure</h2>
+    <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+          <th scope="col">Ticker</th>
+          <th scope="col">Contango</th>
+          <th scope="col">Front Contango</th>
+          <th scope="col">Front Month</th>
+          <th scope="col">Back Month</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="{% url 'ticker-detail' ticker_name=futures_contract %}">{{ futures_contract.ticker_name }}</a></td>
+                <td>{{ futures_contract.get_latest_quote.contango }}</td>
+                <td>{{ futures_contract.get_latest_quote.front_contango }}</td>
+                <td>{{ futures_contract.get_latest_quote.closing_price_1 }}</td>
+                <td>{{ futures_contract.get_latest_quote.closing_price_2 }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="chLine"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2>ETFs</h2>
+    <table class="table table-striped table-sm">
+    <thead>
+    <tr>
+      <th scope="col">Ticker</th>
+      <th scope="col">Price</th>
+      <th scope="col">Leverage Ratio</th>
+      <th scope="col">Last Updated</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ticker in etfs %}
+        <tr>
+            <td><a href="{% url 'ticker-detail' ticker_name=ticker.ticker_name %}">{{ ticker.ticker_name }}</a></td>
+            <td>{{ ticker.get_latest_quote.closing_price }}</td>
+            <td>{{ ticker.leverage_ratio }}</td>
+            <td>{{ ticker.get_latest_quote.date }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}
+{% block scripts %}
+<script>
+//Line Chart
+var chartColors = ['#007bff','rgba(0,122,255,0.5)',
+                   '#28a745','rgba(40,167,69,0.5)',
+                   '#6610f2','rgba(102,16,242,0.5)',];
+var chartDatasets =[
+    {
+        data: {{ futures_time_series }},
+        backgroundColor: chartColors[1],
+        borderColor: chartColors[0],
+        borderWidth: 4,
+        pointBackgroundColor: chartColors[0]
+    },
+];
+var chartData = {
+  labels: ["Front Month", "Back Month", "Third Month",],
+  datasets: chartDatasets,
+};
+var chLine = document.getElementById("chLine");
+if (chLine) {
+  new Chart(chLine, {
+  type: 'line',
+  data: chartData,
+  options: {
+    scales: {
+      yAxes: [{
+        ticks: {
+            beginAtZero: false
+        },
+      }]
+    },
+    legend: {
+        display: false,
+    }
+  }
+  });
+}
+//Follow/Unfollow Button
+$('#follow-btn').click(function(){
+    $('#followModal').modal('show')
+})
+;
+</script>
+{% endblock %}
