@@ -71,7 +71,7 @@ var chartColors = ['#007bff','rgba(0,122,255,0.5)',
 var chartDatasets = [
     {% if ticker.ticker_type == 'ETF' %}
         {
-        data: {{ price_history }},
+        data: {{ price_history|safe }},
         backgroundColor: chartColors[1],
         borderColor: chartColors[0],
         borderWidth: 4,
@@ -80,7 +80,7 @@ var chartDatasets = [
     {% elif ticker.ticker_type == 'Future' %}
         {
         label: 'Front Month',
-        data: {{ price_history_1 }},
+        data: {{ price_history_1|safe }},
         backgroundColor: chartColors[1],
         borderColor: chartColors[0],
         borderWidth: 4,
@@ -88,7 +88,7 @@ var chartDatasets = [
         },
         {
         label: 'Back Month',
-        data: {{ price_history_2 }},
+        data: {{ price_history_2|safe }},
         backgroundColor: chartColors[3],
         borderColor: chartColors[2],
         borderWidth: 4,
@@ -96,7 +96,7 @@ var chartDatasets = [
         },
         {
         label: 'Third Month',
-        data: {{ price_history_3 }},
+        data: {{ price_history_3|safe }},
         backgroundColor: chartColors[5],
         borderColor: chartColors[4],
         borderWidth: 4,
@@ -105,7 +105,7 @@ var chartDatasets = [
     {% endif %}
 ];
 var chartData = {
-  labels: {{price_dates|safe}},
+  labels: {{ price_dates|safe }},
   datasets: chartDatasets,
 };
 var chLine = document.getElementById("chLine");

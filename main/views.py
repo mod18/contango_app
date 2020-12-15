@@ -35,7 +35,7 @@ def ticker_detail(request, ticker_name):
     if ticker.ticker_type == 'ETF':
         recent_quotes = ticker.get_quotes()
         price_dates = [str(quote.date) for quote in recent_quotes]
-        price_history = [quote.closing_price for quote in recent_quotes]
+        price_history = [str(quote.closing_price) for quote in recent_quotes]
 
         context = {
             'ticker': ticker,
@@ -47,9 +47,9 @@ def ticker_detail(request, ticker_name):
         price_dates = [str(quote.date) for quote in recent_quotes]
         price_history = {'c1': [], 'c2': [], 'c3': []}
         for quote in recent_quotes:
-            price_history['c1'].append(quote.closing_price_1)
-            price_history['c2'].append(quote.closing_price_2)
-            price_history['c3'].append(quote.closing_price_3)
+            price_history['c1'].append(str(quote.closing_price_1))
+            price_history['c2'].append(str(quote.closing_price_2))
+            price_history['c3'].append(str(quote.closing_price_3))
 
         context = {
             'ticker': ticker,
@@ -74,9 +74,9 @@ def category_detail(request, category_name):
     futures_contract = category.get_futures_contract()
     latest_futures_quote = futures_contract.get_latest_quote()
     futures_time_series = [
-        latest_futures_quote.closing_price_1,
-        latest_futures_quote.closing_price_2,
-        latest_futures_quote.closing_price_3,
+        str(latest_futures_quote.closing_price_1),
+        str(latest_futures_quote.closing_price_2),
+        str(latest_futures_quote.closing_price_3),
     ]
     context = {
         'category': category,

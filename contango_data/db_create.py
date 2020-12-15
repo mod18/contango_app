@@ -41,20 +41,45 @@ values
 # fct_closing_quotes_raw
 """
 drop table fct_closing_quotes_raw;
+--sqlite
 create table fct_closing_quotes_raw (date TEXT, ticker_name TEXT, ticker_contract INT, closing_price REAL, retrieved_ts INTEGER, source TEXT);
+--postgres
+create table fct_closing_quotes_raw (id SERIAL, date TEXT, ticker_name TEXT, ticker_contract INTEGER, closing_price NUMERIC, retrieved_ts INTEGER, source TEXT);
 """
 # fct_closing_quotes_daily
 """
 drop table fct_closing_quotes_daily;
+--sqlite
 create table fct_closing_quotes_daily (date TEXT, ticker_name TEXT, ticker_contract INT, closing_price REAL, retrieved_ts INTEGER, source TEXT);
+--postgres
+create table fct_closing_quotes_daily (id SERIAL, date TEXT, ticker_name TEXT, ticker_contract INTEGER, closing_price NUMERIC, retrieved_ts INTEGER, source TEXT);
 """
 # fct_futures_daily
 """
 drop table fct_futures_daily;
+--sqlite
 create table fct_futures_daily (id INTEGER, date TEXT, ticker_id TEXT, contango TEXT, front_contango REAL, closing_price_1 REAL, c1_quote_id TEXT, closing_price_2 REAL, c2_quote_id TEXT, closing_price_3 REAL, c3_quote_id TEXT);
+--postgres
+create table fct_futures_daily (id INTEGER, date TEXT, ticker_id INTEGER, contango TEXT, front_contango NUMERIC, closing_price_1 NUMERIC, c1_quote_id TEXT, closing_price_2 NUMERIC, c2_quote_id TEXT, closing_price_3 NUMERIC, c3_quote_id TEXT);
 """
 # fct_etf_daily
 """
 drop table fct_etf_daily;
+--sqlite3
 create table fct_etf_daily (id INTEGER, ticker_id INTEGER, date TEXT, closing_price REAL);
+--postgres
+create table fct_etf_daily (id INTEGER, ticker_id INTEGER, date TEXT, closing_price NUMERIC);
 """
+
+dropdb -U postgres contango_db
+createdb -U postgres contango_db
+psql -U postgres contango_db
+grant all privileges on database contango_db to mudhop;
+create table fct_closing_quotes_raw (date TEXT, ticker_name TEXT, ticker_contract INTEGER, closing_price NUMERIC, retrieved_ts INTEGER, source TEXT);
+create table fct_closing_quotes_daily (date TEXT, ticker_name TEXT, ticker_contract INTEGER, closing_price NUMERIC, retrieved_ts INTEGER, source TEXT);
+create table fct_futures_daily (id INTEGER, date TEXT, ticker_id INTEGER, contango TEXT, front_contango NUMERIC, closing_price_1 NUMERIC, c1_quote_id TEXT, closing_price_2 NUMERIC, c2_quote_id TEXT, closing_price_3 NUMERIC, c3_quote_id TEXT);
+create table fct_etf_daily (id INTEGER, ticker_id INTEGER, date TEXT, closing_price NUMERIC);
+manage.py migrate --run-syncdb
+from django.contrib.contenttypes.models import ContentType
+ContentType.objects.all().delete()
+manage.py loaddata datadump.json

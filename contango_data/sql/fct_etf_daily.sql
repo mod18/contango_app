@@ -1,7 +1,11 @@
 --Updates final downstream EFT price table
 INSERT INTO fct_etf_daily
+(id,
+ticker_id,
+date,
+closing_price)
 SELECT
-    q.rowid AS id,
+    q.id,
     t.id AS ticker_id,
     q.date,
     q.closing_price

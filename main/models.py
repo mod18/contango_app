@@ -115,7 +115,7 @@ class FuturesDailyQuote(models.Model):
     """Model for daily futures quote and related data."""
     ticker = models.ForeignKey(Ticker, on_delete=models.CASCADE)
     date = models.DateField()
-    contango = models.IntegerField()
+    contango = models.CharField(max_length=10)
     front_contango = models.FloatField()
     closing_price_1 = models.FloatField()
     closing_price_2 = models.FloatField()

@@ -2,6 +2,7 @@ import django
 import os
 import sys
 from typing import Dict
+from contango import get_env_variable
 
 from django.conf import settings
 from sqlalchemy import create_engine, engine
@@ -22,9 +23,8 @@ def db_connector() -> engine.Engine:
     os.environ['DJANGO_SETTINGS_MODULE'] = 'contango.settings'
     django.setup()
 
-    database_name = settings.DATABASES['default']['NAME']
-    database_url = f'sqlite:///{database_name}'
-    eng = create_engine(database_url, echo=False)
+    database_url = f"postgresql+psycopg2://{get_env_variable('DB_USER')}:{get_env_variable('DB_PASSWORD')}@{get_env_variable('DB_HOST')}:{get_env_variable('DB_PORT')}/{get_env_variable('DB_NAME')}"
+    eng = create_engine(database_url, execution_options={'isolation_level': 'READ COMMITTED',}, echo=False)
     return eng
 
 

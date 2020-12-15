@@ -32,7 +32,10 @@ def transform_closing_data(date = str(datetime.date.today())) -> Tuple:
             try:
                 logger.debug(f'Updating {table}')
                 filename = table + '.sql'
+                logger.debug(get_sql(filename=filename, formatting_map={'date': date}))
+                trans = connection.begin()
                 connection.execute(get_sql(filename=filename, formatting_map={'date': date}))
+                trans.commit()
             except Exception as e:
                 logger.error(f'{table} update FAILED: {e}')
                 errors.append(table)

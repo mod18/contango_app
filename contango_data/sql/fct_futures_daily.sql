@@ -2,7 +2,7 @@
 WITH futures_prices AS (
     --Get current date closing futures prices
     SELECT
-           rowid,
+           id,
            date,
            ticker_name,
            ticker_contract,
@@ -15,15 +15,15 @@ WITH futures_prices AS (
 prices_denormalized AS (
     --Denormalize prices
     SELECT
-        c1.rowid AS id,
+        c1.id AS id,
         c1.date,
         t.id AS ticker_id,
         c1.closing_price AS closing_price_1,
-        c1.rowid AS c1_quote_id,
+        c1.id AS c1_quote_id,
         c2.closing_price AS closing_price_2,
-        c2.rowid AS c2_quote_id,
+        c2.id AS c2_quote_id,
         c3.closing_price AS closing_price_3,
-        c3.rowid AS c3_quote_id
+        c3.id AS c3_quote_id
     FROM main_ticker t
     LEFT OUTER JOIN futures_prices c1
         ON c1.ticker_name = t.ticker_name
@@ -56,5 +56,28 @@ daily_calc AS (
     FROM prices_denormalized
 )
 INSERT INTO fct_futures_daily
-SELECT * FROM daily_calc
+(id,
+date,
+ticker_id,
+contango,
+front_contango,
+closing_price_1,
+c1_quote_id,
+closing_price_2,
+c2_quote_id,
+closing_price_3,
+c3_quote_id)
+SELECT
+    id,
+    date,
+    ticker_id,
+    contango,
+    front_contango,
+    closing_price_1,
+    c1_quote_id,
+    closing_price_2,
+    c2_quote_id,
+    closing_price_3,
+    c3_quote_id
+FROM daily_calc
 ;

@@ -100,7 +100,7 @@ var chartColors = ['#007bff','rgba(0,122,255,0.5)',
                    '#6610f2','rgba(102,16,242,0.5)',];
 var chartDatasets =[
     {
-        data: {{ futures_time_series }},
+        data: {{ futures_time_series|safe }},
         backgroundColor: chartColors[1],
         borderColor: chartColors[0],
         borderWidth: 4,
